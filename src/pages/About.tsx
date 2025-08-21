@@ -230,7 +230,7 @@ const About: React.FC = () => {
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                Mitra & Kolaborator
+                Mitra & Kolaborasi
               </h2>
               <p className="text-lg text-gray-600">
                 RPTRA Kebon Melati bekerja sama dengan berbagai pihak untuk 
