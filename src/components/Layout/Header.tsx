@@ -9,12 +9,12 @@ const Header: React.FC = () => {
   const { t, i18n } = useTranslation();
 
   const navigation = [
-    { name: t('nav.home'), href: '/' },
-    { name: t('nav.about'), href: '/about' },
-    { name: t('nav.events'), href: '/events' },
-    { name: t('nav.news'), href: '/news' },
-    { name: t('nav.gallery'), href: '/gallery' },
-    { name: t('nav.contact'), href: '/contact' },
+    { name: t('Beranda'), href: '/' },
+    { name: t('Tentang Kami'), href: '/about' },
+    { name: t('Kegiatan'), href: '/events' },
+    { name: t('Berita'), href: '/news' },
+    { name: t('Kegiatan'), href: '/gallery' },
+    { name: t('Kontak Kami'), href: '/contact' },
   ];
 
   return (

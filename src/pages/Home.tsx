@@ -15,17 +15,17 @@ const Home: React.FC = () => {
   const heroSlides = [
     {
       image: 'https://images.pexels.com/photos/1094072/pexels-photo-1094072.jpeg?auto=compress&cs=tinysrgb&w=1920&h=800',
-      title: t('home.hero.title'),
-      subtitle: t('home.hero.subtitle')
+      title: 'Selamat Datang di RPTRA BONTI',
+      subtitle: 'Tempat Bermain, Berkreasi, Belajar, Bersosialisasi Dengan Ssesama'
     },
     {
       image: 'https://images.pexels.com/photos/1350560/pexels-photo-1350560.jpeg?auto=compress&cs=tinysrgb&w=1920&h=800',
       title: 'Bermain & Belajar Bersama',
-      subtitle: 'Fasilitas playground modern dan ruang edukasi yang aman'
+      subtitle: 'Fasilitas Taman Bermain dan ruang Edukasi Yang Aman Dan Nyaman'
     },
     {
       image: 'https://images.pexels.com/photos/1094081/pexels-photo-1094081.jpeg?auto=compress&cs=tinysrgb&w=1920&h=800',
-      title: 'Komunitas yang Peduli',
+      title: 'Komunitas & Kegiatan Sosial',
       subtitle: 'Bergabung dengan kegiatan komunitas yang memberdayakan keluarga'
     }
   ];
@@ -231,16 +231,21 @@ const Home: React.FC = () => {
                     </div>
                   </div>
                   <div className="text-sm text-gray-500">
-                    <p>Buka setiap hari: 06:00 - 22:00 WIB</p>
+                    <p>Buka setiap hari: 06:00 - 18:00 WIB</p>
                     <p>Akses transportasi umum tersedia</p>
                   </div>
                 </div>
               </div>
               <div className="h-64 bg-gray-300 rounded-lg overflow-hidden">
-                {/* Google Maps embed would go here */}
-                <div className="w-full h-full bg-gradient-to-br from-green-200 to-blue-200 flex items-center justify-center">
-                  <p className="text-gray-600">Peta Lokasi RPTRA</p>
-                </div>
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.479640730367!2d106.8142379!3d-6.2002777!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f6a1a8e9fd37%3A0xfd41c3867e738112!2sRPTRA%20Kebon%20Melati!5e0!3m2!1sid!2sid!4v1755798002460!5m2!1sid!2sid"
+                width="100%"
+                height="100%"
+                className="border-0"
+                allowFullScreen=""
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              ></iframe>
               </div>
             </div>
           </div>

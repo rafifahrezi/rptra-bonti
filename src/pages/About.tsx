@@ -116,7 +116,7 @@ const About: React.FC = () => {
               </div>
               <div className="absolute -bottom-6 -right-6 bg-white p-4 rounded-lg shadow-lg">
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-green-600">2019</div>
+                  <div className="text-2xl font-bold text-green-600">2017</div>
                   <div className="text-sm text-gray-600">Berdiri Sejak</div>
                 </div>
               </div>
@@ -266,11 +266,31 @@ const About: React.FC = () => {
               </div>
               <div className="space-y-2">
                 <div className="flex justify-between">
-                  <span>Senin - Minggu</span>
-                  <span>06:00 - 22:00 WIB</span>
+                  <span>Senin</span>
+                  <span>06:00 - 18:00 WIB</span>
                 </div>
                 <div className="flex justify-between">
-                  <span>Hari Libur Nasional</span>
+                  <span>Selasa</span>
+                  <span>06:00 - 18:00 WIB</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Rabu</span>
+                  <span>06:00 - 18:00 WIB</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Kamis</span>
+                  <span>06:00 - 18:00 WIB</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Jumat</span>
+                  <span>06:00 - 18:00 WIB</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Sabtu</span>
+                  <span>06:00 - 18:00 WIB</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Minggu</span>
                   <span>06:00 - 18:00 WIB</span>
                 </div>
               </div>
@@ -291,10 +311,23 @@ const About: React.FC = () => {
                 <p>Kebon Melati, Tanah Abang</p>
                 <p>Jakarta Pusat 10230</p>
               </div>
+              <div className="h-64 bg-gray-300 rounded-lg overflow-hidden">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.479640730367!2d106.8142379!3d-6.2002777!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f6a1a8e9fd37%3A0xfd41c3867e738112!2sRPTRA%20Kebon%20Melati!5e0!3m2!1sid!2sid!4v1755798002460!5m2!1sid!2sid"
+                width="100%"
+                height="100%"
+                className="border-0"
+                allowFullScreen=""
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              ></iframe>
+              </div>
               <div className="mt-6 pt-6 border-t border-gray-300">
                 <p className="text-sm text-gray-600">
                   Mudah diakses dengan transportasi umum. 
-                  Dekat dengan stasiun Tanah Abang dan halte TransJakarta.
+                </p>
+                <p className="text-sm text-gray-600">
+                  Dekat dengan stasiun Karet hanya berjarak -+ 290m.
                 </p>
               </div>
             </div>
