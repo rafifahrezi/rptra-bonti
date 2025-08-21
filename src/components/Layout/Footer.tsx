@@ -12,21 +12,24 @@ const Footer: React.FC = () => {
           {/* About Section */}
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center space-x-3 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-r from-green-500 to-blue-500 rounded-full flex items-center justify-center">
-                <span className="text-white font-bold">R</span>
-              </div>
+              <img
+                src="../images/logo.PNG"
+                alt="Logo RPTRA Kebon Melati"
+                className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover border-2 border-gray-100"
+                onError={(e) => (e.currentTarget.src = "/images/fallback-logo.PNG")} // Fallback gambar
+              />
               <div>
                 <h3 className="text-lg font-bold">RPTRA Kebon Melati</h3>
-                <p className="text-sm text-gray-400">Ruang Publik Ramah Anak</p>
+                <p className="text-sm text-gray-400">Ruang Publik Terpadu Ramah Anak</p>
               </div>
             </div>
             <p className="text-gray-300 mb-4">
-              RPTRA Kebon Melati adalah ruang publik terintegrasi yang dirancang khusus untuk menciptakan 
+              RPTRA Kebon Melati adalah ruang publik terintegrasi yang dirancang khusus untuk menciptakan
               lingkungan aman dan ramah anak di Jakarta Pusat.
             </p>
             <div className="flex space-x-4">
-              <a href="https://instagram.com/rptrabonti" target="_blank" rel="noopener noreferrer" 
-                 className="text-gray-400 hover:text-green-400 transition-colors">
+              <a href="https://instagram.com/rptrabonti" target="_blank" rel="noopener noreferrer"
+                className="text-gray-400 hover:text-green-400 transition-colors">
                 <Instagram className="w-5 h-5" />
               </a>
               <a href="#" className="text-gray-400 hover:text-green-400 transition-colors">
