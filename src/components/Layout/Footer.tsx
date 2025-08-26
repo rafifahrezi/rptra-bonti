@@ -54,7 +54,7 @@ const Footer: React.FC = () => {
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-lg font-semibold mb-4">Tautan</h4>
+            <h4 className="text-lg font-semibold mb-4">Tautan Cepat</h4>
             <ul className="space-y-2">
               <li>
                 <Link to="/about" className="text-gray-300 hover:text-green-400 transition-colors">
