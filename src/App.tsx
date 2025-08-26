@@ -48,16 +48,19 @@ import UserManagement from './admins/UserManagement';
 import EventsManagement from './admins/EventsManagement';
 import GalleryManagement from './admins/GalleryManagement';
 // import About from './pages/About';
-// import News from './pages/News';
+import News from './pages/News';
+import NewsDetailPage from "./pages/NewsDetailPage";
+import GalleryDetailPage from "./pages/GalleryDetailPage";
+import GalleryPage from './pages/Gallery';
 // import Gallery from './pages/Gallery';
 // import Contact from './pages/Contact';
 
-const News: React.FC = () => (
-  <div className="container mx-auto px-4 py-8">
-    <h1 className="text-3xl font-bold mb-6">Berita</h1>
-    <p>Halaman berita akan segera hadir.</p>
-  </div>
-);
+// const News: React.FC = () => (
+//   <div className="container mx-auto px-4 py-8">
+//     <h1 className="text-3xl font-bold mb-6">Berita</h1>
+//     <p>Halaman berita akan segera hadir.</p>
+//   </div>
+// );
 
 const Gallery: React.FC = () => (
   <div className="container mx-auto px-4 py-8">
@@ -100,7 +103,9 @@ function App() {
               <Route path="/about" element={<About />} />
               <Route path="/events" element={<Events />} />
               <Route path="/news" element={<News />} />
-              <Route path="/gallery" element={<Gallery />} />
+              <Route path="/news/:id" element={<NewsDetailPage />} />
+              <Route path="/gallery" element={<GalleryPage />} />
+              <Route path="/gallery/:id" element={<GalleryDetailPage />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/terms" element={<Terms />} />
