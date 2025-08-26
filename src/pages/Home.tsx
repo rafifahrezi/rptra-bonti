@@ -1,13 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { Calendar, MapPin, Users, Heart, Book, Activity, ChevronRight, ChevronLeft } from 'lucide-react';
+import { Calendar, MapPin, Users, Heart, Book, Activity, ChevronRight, ChevronLeft, Clock } from 'lucide-react';
 import Button from '../components/common/Button';
+import { doc, onSnapshot, Timestamp } from 'firebase/firestore';
+import { db } from '../config/firebase';
 import { Event, NewsPost } from '../types';
+interface RptraStatus {
+  status: boolean;
+  updatedAt: Timestamp | null;
+  updatedBy: string;
+}
 
 const Home: React.FC = () => {
   const { t } = useTranslation();
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [rptraStatus, setRptraStatus] = useState<RptraStatus | null>(null);
   const [recentEvents, setRecentEvents] = useState<Event[]>([]);
   const [latestNews, setLatestNews] = useState<NewsPost[]>([]);
 
@@ -53,6 +61,20 @@ const Home: React.FC = () => {
     }
   ];
 
+    // Real-time RPTRA status
+    useEffect(() => {
+      const statusDocRef = doc(db, 'operasional', 'current');
+      const unsubscribe = onSnapshot(statusDocRef, (docSnap) => {
+        if (docSnap.exists()) {
+          setRptraStatus(docSnap.data() as RptraStatus);
+        } else {
+          setRptraStatus({ status: false, updatedAt: null, updatedBy: 'system' });
+        }
+      }, (error) => console.error('Gagal ambil status operasional:', error));
+  
+      return () => unsubscribe();
+    }, []);
+
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
@@ -67,6 +89,14 @@ const Home: React.FC = () => {
   const prevSlide = () => {
     setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
   };
+  
+  const formatDate = (timestamp: Timestamp | null) => {
+      if (!timestamp) return '-';
+      return new Intl.DateTimeFormat('id-ID', {
+        dateStyle: 'medium',
+        timeStyle: 'short'
+      }).format(timestamp.toDate());
+    };
 
   return (
     <div className="min-h-screen">
@@ -126,6 +156,25 @@ const Home: React.FC = () => {
               }`}
             />
           ))}
+        </div>
+      </section>
+
+       {/* RPTRA Status */}
+      <section className="py-8 bg-gray-50">
+        <div className="container mx-auto px-4 text-center">
+          {rptraStatus === null ? (
+            <span className="px-4 py-2 bg-gray-200 text-gray-700 rounded-full">Loading status...</span>
+          ) : (
+            <div className="inline-block px-4 py-2 rounded-full font-semibold bg-white shadow-md">
+              <span className={`px-3 py-1 rounded-full ${rptraStatus.status ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                {rptraStatus.status ? 'Sedang Buka' : 'Sedang Tutup'}
+              </span>
+              <div className="text-sm text-gray-600 mt-1 flex flex-col sm:flex-row gap-2 justify-center items-center">
+                <span className="flex items-center gap-1"><Clock className="w-4 h-4" /> {formatDate(rptraStatus.updatedAt)}</span>
+                <span>oleh {rptraStatus.updatedBy}</span>
+              </div>
+            </div>
+          )}
         </div>
       </section>
 

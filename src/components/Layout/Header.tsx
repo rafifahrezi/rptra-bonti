@@ -13,7 +13,7 @@ const Header: React.FC = () => {
     { name: t('Tentang Kami'), href: '/about' },
     { name: t('Kegiatan'), href: '/events' },
     { name: t('Berita'), href: '/news' },
-    { name: t('Kegiatan'), href: '/gallery' },
+    { name: t('Galeri'), href: '/gallery' },
     { name: t('Kontak Kami'), href: '/contact' },
   ];
 
@@ -32,8 +32,7 @@ const Header: React.FC = () => {
             <img
               src="../images/logo.PNG"
               alt="Logo RPTRA Kebon Melati"
-              className="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover border-2 border-gray-100"
-              onError={(e) => (e.currentTarget.src = "/images/fallback-logo.PNG")} // Fallback gambar
+              className="w-20 h-20 sm:w-20 sm:h-20 rounded-full"
             />
             <div className="flex flex-col">
               <h1 className="text-lg sm:text-xl font-bold text-gray-900 tracking-tight">
