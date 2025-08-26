@@ -8,7 +8,6 @@ export default defineConfig({
     exclude: ['lucide-react'],
   },
   build: {
-    outDir: "dist",
-    assetsDir: "assets",
+    chunkSizeWarningLimit: 2000, // Set the limit to 2000 KB (2 MB)
   },
 });
