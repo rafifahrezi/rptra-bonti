@@ -40,6 +40,8 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import About from './pages/About';
 import Events from './pages/Events';
+import AdminAbout from "./admins/AdminAbout";
+
 
 // Protected Components
 import ProtectedRoute from './components/ProtectedRoute';
@@ -109,6 +111,7 @@ function App() {
               <Route path="/contact" element={<Contact />} />
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/terms" element={<Terms />} />
+              <Route path="/admin/about" element={<AdminAbout />} />
 
               {/* Auth Routes */}
               <Route path="/login" element={<Login />} />

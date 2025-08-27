@@ -45,6 +45,7 @@ interface QuickStat {
   color: string;
 }
 
+
 // Reusable components
 const DashboardCard: React.FC<{ item: DashboardItem }> = ({ item }) => {
   const IconComponent = item.icon;
@@ -177,13 +178,8 @@ const AdminDashboard: React.FC = () => {
         status: newStatus,
         updatedAt: serverTimestamp(),
         updatedBy: currentUser?.email || 'system',
-      });
-      setOperasional((prev) => ({
-        ...prev!,
-        status: newStatus,
-        updatedAt: serverTimestamp(),
-        updatedBy: currentUser?.email || 'system',
-      }));
+      });     
+      
     } catch (err) {
       console.error('Error updating status:', err);
       setError('Gagal memperbarui status');
@@ -218,7 +214,15 @@ const AdminDashboard: React.FC = () => {
 
   const dashboardItems: DashboardItem[] = [
     {
-      title: 'Manajemen Pengguna',
+      title: 'Tentang Kami',
+      description: 'Kelola halaman About',
+      icon: Shield,
+      color: 'purple',
+      href: '/admin/about',
+      features: ['Edit Hero Section', 'Tambah Program', 'Hapus Program'],
+    },
+    {
+      title: 'Manajemen Admin',
       description: 'Kelola pengguna sistem dan izin akses',
       icon: Users,
       color: 'blue',
@@ -226,12 +230,12 @@ const AdminDashboard: React.FC = () => {
       features: ['Tambah/Edit Pengguna', 'Atur Role & Permission', 'Monitor Aktivitas'],
     },
     {
-      title: 'Kegiatan & Berita',
-      description: 'Tambah dan edit kegiatan serta berita',
+      title: 'Kegiatan',
+      description: 'Tambah dan edit kegiatan',
       icon: Calendar,
       color: 'orange',
       href: '/admin/events',
-      features: ['Tambah Kegiatan', 'Publikasi Berita', 'Jadwal Event'],
+      features: ['Tambah Kegiatan', 'Publikasi Kegiatan', 'Jadwal Event'],
     },
     {
       title: 'Galeri',
@@ -248,7 +252,7 @@ const AdminDashboard: React.FC = () => {
       color: 'green',
       href: '/admin/analytics',
       features: ['Traffic Report', 'User Analytics', 'Performance Stats'],
-    },
+    },    
   ];
 
   const quickStats: QuickStat[] = [
