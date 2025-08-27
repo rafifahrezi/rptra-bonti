@@ -81,7 +81,7 @@ const Footer: React.FC = () => {
                   Kontak
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 {currentUser && isAdmin ? (
                   <div className="space-y-1">
                     <Link to="/admin" className="text-green-400 hover:text-green-300 transition-colors block">
@@ -99,7 +99,7 @@ const Footer: React.FC = () => {
                     Login as Admin
                   </Link>
                 )}
-              </li>
+              </li> */}
             </ul>
           </div>
 
@@ -127,7 +127,7 @@ const Footer: React.FC = () => {
           </div>
         </div>
 
-        <div className="border-t border-gray-800 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
+        <div className="border-t border-gray-800 mt-12 pt-6 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-400 text-sm">
             © 2025 RPTRA Kebon Melati. Seluruh hak cipta dilindungi.
           </p>
@@ -142,14 +142,14 @@ const Footer: React.FC = () => {
         </div>
 
         {/* Admin Status Indicator */}
-        {currentUser && isAdmin && (
+        {/* {currentUser && isAdmin && (
           <div className="mt-4 text-center">
             <div className="inline-flex items-center px-3 py-1 rounded-full text-xs bg-green-800 text-green-200">
               <div className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
               Logged in as admin: {currentUser.email}
             </div>
           </div>
-        )}
+        )} */}
       </div>
     </footer>
   );
