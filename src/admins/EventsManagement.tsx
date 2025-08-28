@@ -11,8 +11,9 @@ import {
   orderBy,
 } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
-import { Calendar, MapPin, Plus, Edit, Trash2, Eye, Search, Users, Percent } from "lucide-react";
-import { db, auth } from "../config/firebase"; 
+import { Calendar, MapPin, Plus, Edit, Trash2, Eye, Search, ArrowLeft } from "lucide-react";
+import { db, auth } from "../config/firebase";
+import { Link } from "react-router-dom";
 
 type EventStatus = "upcoming" | "ongoing" | "finished";
 
@@ -77,6 +78,8 @@ const EventManagement: React.FC = () => {
 
   // form
   const [form, setForm] = useState<Omit<EventDoc, "id">>(emptyForm);
+  const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // filter/sort (simple)
   const [search, setSearch] = useState("");
@@ -152,6 +155,7 @@ const EventManagement: React.FC = () => {
     setForm(emptyForm);
     setSelected(null);
     setShowModal(true);
+    setError(null);
   };
 
   const openEdit = (ev: EventDoc) => {
@@ -160,40 +164,68 @@ const EventManagement: React.FC = () => {
     const { id, ...rest } = ev;
     setForm(rest);
     setShowModal(true);
+    setError(null);
   };
 
   const openView = (ev: EventDoc) => {
     setMode("view");
     setSelected(ev);
     setShowModal(true);
+    setError(null);
+  };
+
+  const validateForm = () => {
+    if (!form.title?.trim()) return "Judul wajib diisi";
+    if (!form.category) return "Kategori wajib dipilih";
+    if (!form.date) return "Tanggal wajib diisi";
+    if (!form.location?.trim()) return "Lokasi wajib diisi";
+    if (!form.status) return "Status wajib dipilih";
+    return null;
   };
 
   const handleSubmit = async () => {
-    // validation ringan
-    if (!form.title || !form.category || !form.date || !form.location || !form.status) {
-      alert("Harap isi: Judul, Kategori, Tanggal, Lokasi, Status.");
+    setError(null);
+    setIsSubmitting(true);
+
+    const validationError = validateForm();
+    if (validationError) {
+      setError(validationError);
+      setIsSubmitting(false);
       return;
     }
 
     try {
+      const eventData = {
+        ...form,
+        title: form.title.trim(),
+        location: form.location.trim(),
+        description: form.description?.trim() || '',
+        image: form.image || '',
+        updatedAt: serverTimestamp(),
+      };
+
       if (mode === "create") {
         await addDoc(collection(db, "events"), {
-          ...form,
+          ...eventData,
           createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp(),
         });
-      } else if (mode === "edit" && selected) {
-        await updateDoc(doc(db, "events", selected.id), {
-          ...form,
-          updatedAt: serverTimestamp(),
-        });
+      } else if (mode === "edit" && selected?.id) {
+        await updateDoc(doc(db, "events", selected.id), eventData);
       }
+
       setShowModal(false);
+      setForm(emptyForm);
     } catch (err) {
-      console.error(err);
-      alert("Gagal menyimpan data.");
+      console.error('Error saving event:', err);
+      setError('Gagal menyimpan data. Silakan coba lagi.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
+
+  const handleCategorySelect = (category: string) => {
+    setForm({ ...form, category });
+  }
 
   const handleDelete = async (id: string) => {
     if (!confirm("Hapus event ini?")) return;
@@ -208,10 +240,8 @@ const EventManagement: React.FC = () => {
   // --- summary cards ---
   const summary = useMemo(() => {
     const totalEvent = events.length;
-    const totalParticipants = events.reduce((acc, ev: any) => acc + (ev.participants ?? 0), 0);
     const activeEvent = events.filter((ev) => ev.status === "ongoing").length;
-    
-    let avgParticipation = 0;
+
     let totalCapacity = 0;
     let totalRegistered = 0;
     events.forEach((ev: any) => {
@@ -220,11 +250,8 @@ const EventManagement: React.FC = () => {
         totalCapacity += ev.capacity;
       }
     });
-    if (totalCapacity > 0) {
-      avgParticipation = Math.round((totalRegistered / totalCapacity) * 100);
-    }
 
-    return { totalEvent, totalParticipants, activeEvent, avgParticipation };
+    return { totalEvent, activeEvent };
   }, [events]);
 
   // --- render ---
@@ -242,18 +269,34 @@ const EventManagement: React.FC = () => {
     <div className="min-h-screen bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-6 flex items-center justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-1">Event Management</h1>
-            <p className="text-gray-600">Kelola event untuk ditampilkan ke pengguna.</p>
+        <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+            <div className="flex items-center gap-4">
+              <Link
+                to="/admin"
+                className="inline-flex items-center px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors"
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Kembali
+              </Link>
+              <div>
+                <h1 className="text-3xl font-bold text-gray-800 mb-2">
+                  Event Management
+                </h1>
+                <p className="text-gray-600">
+                  Kelola event untuk ditampilkan ke pengguna.
+                </p>
+              </div>
+            </div>
+            {/* Add Button - Only for SuperAdmin */}
+            <button
+              onClick={openCreate}
+              className="bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              Buat Event
+            </button>
           </div>
-          <button
-            onClick={openCreate}
-            className="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
-          >
-            <Plus className="w-4 h-4" />
-            Buat Event
-          </button>
         </div>
 
         {/* Summary Cards */}
@@ -269,32 +312,12 @@ const EventManagement: React.FC = () => {
           </div>
 
           <div className="bg-white p-4 rounded-lg shadow flex items-center gap-3">
-            <div className="bg-green-100 text-green-600 p-3 rounded-lg">
-              <Users className="w-6 h-6" />
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">Total Peserta</p>
-              <p className="text-2xl font-bold">{summary.totalParticipants}</p>
-            </div>
-          </div>
-
-          <div className="bg-white p-4 rounded-lg shadow flex items-center gap-3">
             <div className="bg-orange-100 text-orange-600 p-3 rounded-lg">
               <Eye className="w-6 h-6" />
             </div>
             <div>
               <p className="text-sm text-gray-500">Event Aktif</p>
               <p className="text-2xl font-bold">{summary.activeEvent}</p>
-            </div>
-          </div>
-
-          <div className="bg-white p-4 rounded-lg shadow flex items-center gap-3">
-            <div className="bg-purple-100 text-purple-600 p-3 rounded-lg">
-              <Percent className="w-6 h-6" />
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">Rata-rata Partisipasi</p>
-              <p className="text-2xl font-bold">{summary.avgParticipation}%</p>
             </div>
           </div>
         </div>
@@ -409,6 +432,12 @@ const EventManagement: React.FC = () => {
         )}
       </div>
 
+      {error && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded m-6">
+          {error}
+        </div>
+      )}
+
       {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
@@ -422,138 +451,155 @@ const EventManagement: React.FC = () => {
               </button>
             </div>
 
-            {mode === "view" && selected ? (
-              <div className="p-6 space-y-4">
-                {selected.image && (
-                  <img src={selected.image} alt={selected.title} className="w-full h-64 object-cover rounded" />
-                )}
-                <div className="flex items-center gap-2">
-                  <span className={`px-2 py-1 rounded text-sm ${statusPill(selected.status)}`}>
-                    {statuses.find((s) => s.value === selected.status)?.label}
-                  </span>
-                  <span className="bg-gray-800/80 text-white px-2 py-1 rounded text-xs">{selected.category}</span>
-                </div>
-                <h3 className="text-2xl font-bold">{selected.title}</h3>
-                <p className="text-gray-700">{selected.description}</p>
-                <div className="text-sm text-gray-600 space-y-2">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="w-4 h-4" />
-                    <span>{new Date(selected.date).toLocaleDateString("id-ID")}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <MapPin className="w-4 h-4" />
-                    <span>{selected.location}</span>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="p-6 space-y-5">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Judul *</label>
-                    <input
-                      value={form.title}
-                      onChange={(e) => setForm({ ...form, title: e.target.value })}
-                      className="w-full px-3 py-2 border rounded-lg"
-                      placeholder="Judul event…"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Kategori *</label>
-                    <select
-                      value={form.category}
-                      onChange={(e) => setForm({ ...form, category: e.target.value })}
-                      className="w-full px-3 py-2 border rounded-lg"
-                    >
-                      <option value="">Pilih kategori</option>
-                      {categories.map((c) => (
-                        <option key={c} value={c}>
-                          {c}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Tanggal *</label>
-                    <input
-                      type="date"
-                      value={form.date}
-                      onChange={(e) => setForm({ ...form, date: e.target.value })}
-                      className="w-full px-3 py-2 border rounded-lg"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Lokasi *</label>
-                    <input
-                      value={form.location}
-                      onChange={(e) => setForm({ ...form, location: e.target.value })}
-                      className="w-full px-3 py-2 border rounded-lg"
-                      placeholder="Contoh: RPTRA Bonti"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Status *</label>
-                    <select
-                      value={form.status}
-                      onChange={(e) => setForm({ ...form, status: e.target.value as EventStatus })}
-                      className="w-full px-3 py-2 border rounded-lg"
-                    >
-                      {statuses.map((s) => (
-                        <option key={s.value} value={s.value}>
-                          {s.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium mb-1">URL Gambar</label>
-                    <input
-                      type="url"
-                      value={form.image}
-                      onChange={(e) => setForm({ ...form, image: e.target.value })}
-                      className="w-full px-3 py-2 border rounded-lg"
-                      placeholder="https://…"
-                    />
-                    {form.image && (
+            <div className="p-6 space-y-5">
+              {mode === "view" && selected ? (
+                <div className="space-y-4">
+                  {selected.image && (
+                    <div className="relative w-full h-64 bg-gray-100 rounded">
                       <img
-                        src={form.image}
-                        alt="preview"
-                        className="w-32 h-20 object-cover rounded border mt-2"
-                        onError={(e) => ((e.target as HTMLImageElement).style.display = "none")}
+                        src={selected.image}
+                        alt={selected.title}
+                        className="w-full h-full object-cover rounded"
+                        onError={(e) => (e.target.style.display = "none")}
                       />
-                    )}
+                    </div>
+                  )}
+                  <div className="flex items-center gap-2">
+                    <span className={`px-2 py-1 rounded text-sm ${statusPill(selected.status)}`}>
+                      {statuses.find((s) => s.value === selected.status)?.label}
+                    </span>
+                    <span className="bg-gray-800/80 text-white px-2 py-1 rounded text-xs">
+                      {selected.category}
+                    </span>
+                  </div>
+                  <h3 className="text-2xl font-bold">{selected.title}</h3>
+                  <p className="text-gray-700">{selected.description}</p>
+                  <div className="text-sm text-gray-600 space-y-2">
+                    <div className="flex items-center gap-2">
+                      <Calendar className="w-4 h-4" />
+                      <span>{new Date(selected.date).toLocaleDateString("id-ID")}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <MapPin className="w-4 h-4" />
+                      <span>{selected.location}</span>
+                    </div>
                   </div>
                 </div>
+              ) : (
+                <div className="space-y-5">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Judul *</label>
+                      <input
+                        value={form.title}
+                        onChange={(e) => setForm({ ...form, title: e.target.value })}
+                        className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Judul event…"
+                      />
+                    </div>
 
-                <div>
-                  <label className="block text-sm font-medium mb-1">Deskripsi</label>
-                  <textarea
-                    value={form.description}
-                    onChange={(e) => setForm({ ...form, description: e.target.value })}
-                    rows={4}
-                    className="w-full px-3 py-2 border rounded-lg"
-                    placeholder="Deskripsi singkat event…"
-                  />
-                </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Tanggal *</label>
+                      <input
+                        type="date"
+                        value={form.date}
+                        onChange={(e) => setForm({ ...form, date: e.target.value })}
+                        className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
 
-                <div className="flex justify-end gap-3">
-                  <button className="px-4 py-2 bg-gray-100 rounded-lg" onClick={() => setShowModal(false)}>
-                    Batal
-                  </button>
-                  <button
-                    className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-                    onClick={handleSubmit}
-                  >
-                    {mode === "create" ? "Buat Event" : "Update Event"}
-                  </button>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Lokasi *</label>
+                      <input
+                        value={form.location}
+                        onChange={(e) => setForm({ ...form, location: e.target.value })}
+                        className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Contoh: RPTRA Bonti"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Status *</label>
+                      <select
+                        value={form.status}
+                        onChange={(e) => setForm({ ...form, status: e.target.value })}
+                        className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        {statuses.map((s) => (
+                          <option key={s.value} value={s.value}>
+                            {s.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div className="md:col-span-2">
+                      <label className="block text-sm font-medium mb-1">URL Gambar</label>
+                      <input
+                        type="url"
+                        value={form.image}
+                        onChange={(e) => setForm({ ...form, image: e.target.value })}
+                        className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="https://… (Firebase storage URL when available)"
+                      />
+                      {form.image && (
+                        <div className="relative w-32 h-20 mt-2 bg-gray-100 rounded">
+                          <img
+                            src={form.image}
+                            alt="preview"
+                            className="w-full h-full object-cover rounded border"
+                            onError={(e) => (e.target.style.display = "none")}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-1">Deskripsi</label>
+                    <textarea
+                      value={form.description}
+                      onChange={(e) => setForm({ ...form, description: e.target.value })}
+                      rows={4}
+                      className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="Deskripsi singkat event…"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Kategori *</label>
+                    <div className="flex flex-wrap gap-2">
+                      {categories.map((category) => (
+                        <button
+                          key={category}
+                          type="button"
+                          onClick={() => handleCategorySelect(category)}
+                          className={`px-3 py-1 rounded-full text-sm transition-colors ${form.category === category
+                            ? 'bg-blue-600 text-white'
+                            : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+                            } ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+                          disabled={isSubmitting}
+                        >
+                          {category}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="flex justify-end gap-3">
+                    <button className="px-4 py-2 bg-gray-100 rounded-lg" onClick={() => setShowModal(false)}>
+                      Batal
+                    </button>
+                    <button
+                      className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                      onClick={handleSubmit}
+                    >
+                      {mode === "create" ? "Buat Event" : "Update Event"}
+                    </button>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
       )}
