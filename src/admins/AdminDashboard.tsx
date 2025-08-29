@@ -1,23 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { Link } from 'react-router-dom';
-import { 
-  Users, 
-  Calendar, 
-  Image, 
-  BarChart3, 
+import {
+  Users,
+  Calendar,
+  Image,
+  BarChart3,
   Shield,
   Clock,
   ArrowRight,
   Check,
+  Newspaper,
   X
 } from 'lucide-react';
-import { 
-  doc, 
-  getDoc, 
-  updateDoc, 
+import {
+  doc,
+  getDoc,
+  updateDoc,
   setDoc,
-  serverTimestamp 
+  serverTimestamp
 } from 'firebase/firestore';
 import { db } from '../config/firebase';
 import { Timestamp } from 'firebase/firestore';
@@ -107,9 +108,8 @@ const StatusToggle: React.FC<{ status: boolean; onToggle: () => void; loading: b
   <button
     onClick={onToggle}
     disabled={loading}
-    className={`inline-flex items-center px-4 py-2 rounded-lg font-medium transition-colors ${
-      status ? 'bg-green-100 text-green-700 hover:bg-green-200' : 'bg-red-100 text-red-700 hover:bg-red-200'
-    } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+    className={`inline-flex items-center px-4 py-2 rounded-lg font-medium transition-colors ${status ? 'bg-green-100 text-green-700 hover:bg-green-200' : 'bg-red-100 text-red-700 hover:bg-red-200'
+      } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
   >
     {loading ? (
       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
@@ -178,8 +178,8 @@ const AdminDashboard: React.FC = () => {
         status: newStatus,
         updatedAt: serverTimestamp(),
         updatedBy: currentUser?.email || 'system',
-      });     
-      
+      });
+
     } catch (err) {
       console.error('Error updating status:', err);
       setError('Gagal memperbarui status');
@@ -238,6 +238,14 @@ const AdminDashboard: React.FC = () => {
       features: ['Tambah Kegiatan', 'Publikasi Kegiatan', 'Jadwal Event'],
     },
     {
+      title: 'Berita',
+      description: 'Upload dan Kelola Berita',
+      icon: Newspaper,
+      color: 'gray',
+      href: '/admin/news',
+      features: ['Upload Foto', 'Kelola Berita'],
+    },
+    {
       title: 'Galeri',
       description: 'Upload dan kelola foto galeri',
       icon: Image,
@@ -252,7 +260,7 @@ const AdminDashboard: React.FC = () => {
       color: 'green',
       href: '/admin/analytics',
       features: ['Traffic Report', 'User Analytics', 'Performance Stats'],
-    },    
+    },
   ];
 
   const quickStats: QuickStat[] = [
@@ -273,7 +281,7 @@ const AdminDashboard: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
       <div className="container mx-auto px-4 py-8">
-        
+
         {/* Header */}
         <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">

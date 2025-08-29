@@ -49,6 +49,7 @@ import AdminDashboard from './admins/AdminDashboard';
 import UserManagement from './admins/UserManagement';
 import EventsManagement from './admins/EventsManagement';
 import GalleryManagement from './admins/GalleryManagement';
+import NewsManagement from './admins/NewsManagement';
 // import About from './pages/About';
 import News from './pages/News';
 import NewsDetailPage from "./pages/NewsDetailPage";
@@ -64,12 +65,6 @@ import GalleryPage from './pages/Gallery';
 //   </div>
 // );
 
-const Gallery: React.FC = () => (
-  <div className="container mx-auto px-4 py-8">
-    <h1 className="text-3xl font-bold mb-6">Galeri</h1>
-    <p>Halaman galeri akan segera hadir.</p>
-  </div>
-);
 
 const Contact: React.FC = () => (
   <div className="container mx-auto px-4 py-8">
@@ -111,7 +106,6 @@ function App() {
               <Route path="/contact" element={<Contact />} />
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/terms" element={<Terms />} />
-              <Route path="/admin/about" element={<AdminAbout />} />
 
               {/* Auth Routes */}
               <Route path="/login" element={<Login />} />
@@ -135,6 +129,15 @@ function App() {
               />
               <Route path="/login" element={<Login />} />
               <Route
+                path="/admin/about"
+                element={
+                  <ProtectedRoute>
+                    <AdminAbout  />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="/login" element={<Login />} />
+              <Route
                 path="/admin/gallery"
                 element={
                   <ProtectedRoute>
@@ -148,6 +151,15 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <EventsManagement  />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="/login" element={<Login />} />
+              <Route
+                path="/admin/news"
+                element={
+                  <ProtectedRoute>
+                    <NewsManagement  />
                   </ProtectedRoute>
                 }
               />
