@@ -50,6 +50,8 @@ import UserManagement from './admins/UserManagement';
 import EventsManagement from './admins/EventsManagement';
 import GalleryManagement from './admins/GalleryManagement';
 import NewsManagement from './admins/NewsManagement';
+import AnalyticsManagement from './admins/AnalyticsManagement';
+
 // import About from './pages/About';
 import News from './pages/News';
 import NewsDetailPage from "./pages/NewsDetailPage";
@@ -160,6 +162,15 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <NewsManagement  />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="/login" element={<Login />} />
+              <Route
+                path="/admin/analytics"
+                element={
+                  <ProtectedRoute>
+                    <AnalyticsManagement  />
                   </ProtectedRoute>
                 }
               />
