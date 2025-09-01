@@ -40,7 +40,7 @@ const StatsCard = memo(({ title, value, color = 'green' }: { title: string; valu
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md text-center border border-gray-100 hover:shadow-lg transition-all duration-200">
+    <div className="bg-white rounded-2xl shadow-md p-6 flex flex-col items-center justify-center text-center hover:shadow-lg transition-all duration-200">
       <h3 className="text-lg font-semibold mb-2 text-gray-700 uppercase tracking-wide">{title}</h3>
       <p className={`text-4xl font-bold ${colorClasses[color as keyof typeof colorClasses] || 'text-green-600'}`}>{value}</p>
       <div className="mt-2 text-sm text-gray-500">kunjungan</div>
@@ -243,11 +243,10 @@ const VisitsSection = memo(({ visits, page, setPage, perPage, totalPages, weekly
   const calculateTotal = (visit: Visit) => visit.balita + visit.anak + visit.remaja + visit.dewasa + visit.lansia;
 
   return (
-    
-    <section className="py-20 bg-gradient-to-b from-gray-50 to-white">
+    <section className="py-5 bg-gradient-to-b from-gray-50 to-white">
       <div className="container mx-auto px-4 max-w-7xl">
         {/* Header Section */}
-        <div className="mb-16 text-center">
+        <div className="mb-8 text-center">
           <h2 className="text-4xl font-bold text-gray-900 mb-4">
             Statistik Kunjungan RPTRA Bonti
           </h2>
@@ -256,24 +255,39 @@ const VisitsSection = memo(({ visits, page, setPage, perPage, totalPages, weekly
           </p>
         </div>
 
-        {/* Stats Cards */}
-        <div className="flex justify-center items-center mb-16">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-5xl">
-            <StatsCard
-              title="Mingguan"
-              value={weeklyVisits}
-              color="purple"
-            />
-            <StatsCard
-              title="Bulanan"
-              value={monthlyVisits}
-              color="blue"
-            />
-            <StatsCard
-              title="Tahunan"
-              value={yearlyVisits}
-              color="yellow"
-            />
+        {/* Stats Cards + CTA */}
+        <div className="flex justify-center items-center mb-12">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 w-full max-w-6xl justify-center">
+            <StatsCard title="Mingguan" value={weeklyVisits} color="purple" />
+            <StatsCard title="Bulanan" value={monthlyVisits} color="blue" />
+            <StatsCard title="Tahunan" value={yearlyVisits} color="yellow" />
+            {/* CTA Card */}
+            <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-2xl p-6 border border-yellow-200 shadow-md hover:shadow-lg transition-all duration-300 flex flex-col justify-between">
+              {/* Icon */}
+              <div className="flex justify-center mb-4">
+                <div className="relative">
+                  <div className="bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full p-4 shadow-md">
+                    <Users className="w-10 h-10 text-white" />
+                  </div>
+                </div>
+              </div>
+              {/* Text */}
+              <div className="text-center mb-4">
+                <p className="text-gray-700 text-sm">Klik tombol di bawah untuk</p>
+                <h3 className="text-gray-800 font-semibold">
+                  Permohonan Penggunaan RPTRA
+                </h3>
+              </div>
+
+              {/* Button */}
+              <a
+                href="/request"
+                className="w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-semibold py-3 px-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2 group"
+              >
+                <span>Permohonan</span>
+                <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" />
+              </a>
+            </div>
           </div>
         </div>
 
@@ -283,13 +297,27 @@ const VisitsSection = memo(({ visits, page, setPage, perPage, totalPages, weekly
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-gray-50">
-                  <th className="px-6 py-5 border-b-2 border-gray-100 font-semibold text-gray-700">Tanggal</th>
-                  <th className="px-6 py-5 border-b-2 border-gray-100 font-semibold text-gray-700">Balita</th>
-                  <th className="px-6 py-5 border-b-2 border-gray-100 font-semibold text-gray-700">Anak</th>
-                  <th className="px-6 py-5 border-b-2 border-gray-100 font-semibold text-gray-700">Remaja</th>
-                  <th className="px-6 py-5 border-b-2 border-gray-100 font-semibold text-gray-700">Dewasa</th>
-                  <th className="px-6 py-5 border-b-2 border-gray-100 font-semibold text-gray-700">Lansia</th>
-                  <th className="px-6 py-5 border-b-2 border-gray-100 font-semibold text-gray-700">Total</th>
+                  <th className="px-6 py-5 border-b-2 border-gray-100 font-semibold text-gray-700">
+                    Tanggal
+                  </th>
+                  <th className="px-6 py-5 border-b-2 border-gray-100 font-semibold text-gray-700">
+                    Balita
+                  </th>
+                  <th className="px-6 py-5 border-b-2 border-gray-100 font-semibold text-gray-700">
+                    Anak
+                  </th>
+                  <th className="px-6 py-5 border-b-2 border-gray-100 font-semibold text-gray-700">
+                    Remaja
+                  </th>
+                  <th className="px-6 py-5 border-b-2 border-gray-100 font-semibold text-gray-700">
+                    Dewasa
+                  </th>
+                  <th className="px-6 py-5 border-b-2 border-gray-100 font-semibold text-gray-700">
+                    Lansia
+                  </th>
+                  <th className="px-6 py-5 border-b-2 border-gray-100 font-semibold text-gray-700">
+                    Total
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -298,12 +326,24 @@ const VisitsSection = memo(({ visits, page, setPage, perPage, totalPages, weekly
                     key={visit.id}
                     className="hover:bg-gray-50 transition-colors duration-200"
                   >
-                    <td className="px-6 py-4 border-b border-gray-100 text-gray-600">{formatDateOnly(visit.date)}</td>
-                    <td className="px-6 py-4 border-b border-gray-100 text-gray-600">{visit.balita}</td>
-                    <td className="px-6 py-4 border-b border-gray-100 text-gray-600">{visit.anak}</td>
-                    <td className="px-6 py-4 border-b border-gray-100 text-gray-600">{visit.remaja}</td>
-                    <td className="px-6 py-4 border-b border-gray-100 text-gray-600">{visit.dewasa}</td>
-                    <td className="px-6 py-4 border-b border-gray-100 text-gray-600">{visit.lansia}</td>
+                    <td className="px-6 py-4 border-b border-gray-100 text-gray-600">
+                      {formatDateOnly(visit.date)}
+                    </td>
+                    <td className="px-6 py-4 border-b border-gray-100 text-gray-600">
+                      {visit.balita}
+                    </td>
+                    <td className="px-6 py-4 border-b border-gray-100 text-gray-600">
+                      {visit.anak}
+                    </td>
+                    <td className="px-6 py-4 border-b border-gray-100 text-gray-600">
+                      {visit.remaja}
+                    </td>
+                    <td className="px-6 py-4 border-b border-gray-100 text-gray-600">
+                      {visit.dewasa}
+                    </td>
+                    <td className="px-6 py-4 border-b border-gray-100 text-gray-600">
+                      {visit.lansia}
+                    </td>
                     <td className="px-6 py-4 border-b border-gray-100 font-medium text-green-600">
                       {calculateTotal(visit)}
                     </td>
@@ -317,18 +357,19 @@ const VisitsSection = memo(({ visits, page, setPage, perPage, totalPages, weekly
           <div className="px-6 py-4 bg-gray-50 border-t border-gray-100">
             <div className="flex justify-between items-center">
               <p className="text-sm text-gray-700 font-medium">
-                Halaman <span className="font-bold">{page}</span> dari <span className="font-bold">{totalPages}</span>
+                Halaman <span className="font-bold">{page}</span> dari{" "}
+                <span className="font-bold">{totalPages}</span>
               </p>
               <div className="flex gap-3">
                 <button
-                  onClick={() => setPage(prev => Math.max(1, prev - 1))}
+                  onClick={() => setPage((prev) => Math.max(1, prev - 1))}
                   disabled={page === 1}
                   className="px-5 py-2.5 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 font-medium text-gray-700 shadow-sm"
                 >
                   Sebelumnya
                 </button>
                 <button
-                  onClick={() => setPage(prev => Math.min(totalPages, prev + 1))}
+                  onClick={() => setPage((prev) => Math.min(totalPages, prev + 1))}
                   disabled={page === totalPages}
                   className="px-5 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200 font-medium shadow-sm"
                 >
@@ -395,12 +436,19 @@ const CtaSection = memo(({ t }: { t: any }) => (
       </p>
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
         <Link to="/events">
-          <Button size="lg" className="bg-white text-green-600 hover:bg-gray-100">
+          <Button
+            size="lg"
+            className="bg-gradient-to-r from-green-600 to-teal-600 text-white font-semibold shadow-md hover:shadow-lg hover:from-green-700 hover:to-teal-700 transition-all duration-200 rounded-lg px-6 py-3 transform hover:scale-105"
+          >
             Lihat Kegiatan
           </Button>
         </Link>
         <Link to="/contact">
-          <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-green-600">
+          <Button
+            size="lg"
+            variant="outline"
+            className="border-2 text-green-600 font-semibold shadow-md hover:shadow-lg hover:bg-green-50 transition-all duration-200 rounded-lg px-6 py-3 transform hover:scale-105"
+          >
             Hubungi Kami
           </Button>
         </Link>

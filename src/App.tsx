@@ -57,7 +57,7 @@ import News from './pages/News';
 import NewsDetailPage from "./pages/NewsDetailPage";
 import GalleryDetailPage from "./pages/GalleryDetailPage";
 import GalleryPage from './pages/Gallery';
-// import Gallery from './pages/Gallery';
+import Request from './pages/Request';
 // import Contact from './pages/Contact';
 
 // const News: React.FC = () => (
@@ -108,6 +108,7 @@ function App() {
               <Route path="/contact" element={<Contact />} />
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/terms" element={<Terms />} />
+              <Route path="/request" element={<Request />} />
 
               {/* Auth Routes */}
               <Route path="/login" element={<Login />} />
